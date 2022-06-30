@@ -11,36 +11,34 @@ import com.company.design.observer.Button;
 import com.company.design.observer.IButtonListener;
 import com.company.design.proxy.BrowserProxy;
 import com.company.design.proxy.IBrowser;
+import com.company.design.strategy.*;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Main {
 
     public static void main(String[] args) {
-        Ftp ftpClient = new Ftp("www.ohou.se", 22, "/home/etc");
-        ftpClient.connect();
-        ftpClient.moveDirectory();
+        Encoder encoder = new Encoder();
 
-//        Writer writer = new Writer("text.tmp");
-//        writer.fileConnect();
-//        writer.fileWrite();
-//
-//        Reader reader = new Reader("text.tmp");
-//        reader.fileConnect();
-//        reader.fileRead();
-//
-//        reader.fileDisconnect();
-//        writer.fileDisconnect();
-//        ftpClient.disConnect();
+        // base64
+        EncodingStrategy base64 = new Base64Strategy();
 
-        Sftp sftpClient = new Sftp("www.ohou.se", 22, "/home/etc", "text.tmp");
-        sftpClient.connect();
+        // normal
+        EncodingStrategy normal = new NormalStrategy();
 
-        sftpClient.write();
-        sftpClient.read();
+        String message = "hello java";
+        encoder.setEncodingStrategy(base64);
+        String base64Result = encoder.getMessage(message);
+        System.out.println(base64Result);
 
-        sftpClient.disConnect();
+        encoder.setEncodingStrategy(normal);
+        String normalResult = encoder.getMessage(message);
 
+        System.out.println(normalResult);
+
+        encoder.setEncodingStrategy(new AppendStrategy());
+        String appendResult = encoder.getMessage(message);
+        System.out.println(appendResult);
     }
 
 
